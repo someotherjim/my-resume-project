@@ -1,0 +1,208 @@
+{
+  "basics": {
+    "name": "James Hofmann (Jim)",
+    "label": "TechOps Lead / DevOps Engineer",
+    "email": "not for GitHub",
+    "phone": "not for GitHub",
+    "url": "https://www.linkedin.com/in/jameshofmannjimpst",
+    "summary": "Versatile and accomplished Information Technology professional with over 10 years of experience. Proven track record in leading international teams, managing cloud infrastructure (AWS/Salesforce), automation scripting, database administration, and agile software development.",
+    "location": {
+      "city": "Reno",
+      "region": "Nevada",
+      "countryCode": "US"
+    },
+    "profiles": [
+      {
+        "network": "LinkedIn",
+        "username": "jameshofmannjimpst",
+        "url": "https://www.linkedin.com/in/jameshofmannjimpst"
+      }
+    ]
+  },
+  "work": [
+    {
+      "name": "Zilliant",
+      "position": "TechOps Lead / DevOps",
+      "startDate": "2014-03",
+      "endDate": "2022-07",
+      "summary": "Led an internationally dispersed team across EU and USA time zones, managing hundreds of Salesforce orgs and an AWS backend of over 500 EC2 servers and 1000+ databases.",
+      "highlights": [
+        "Ran daily standups and served as an Engineering contact point for high-profile customer project resolutions.",
+        "Coordinated with executive leadership and stakeholders to ensure proper task prioritization and tool management.",
+        "Established procedural Best Practices by compiling infrastructure recommendations from AWS, Red9, and Microsoft.",
+        "Provided extensive technical writing, reports, and ensured internal service KPI commitments were met."
+      ]
+    },
+    {
+      "name": "Zilliant",
+      "position": "Associate Operations Engineer",
+      "startDate": "2013-02",
+      "endDate": "2014-03",
+      "summary": "Supported a rapidly growing software company through systems administration and cloud infrastructure migration.",
+      "highlights": [
+        "Administrated Rackspace assets including SQL, FTP, Application, DC, File, and Tableau servers.",
+        "Utilized modified Agile methodologies to help migrate the core product to a fully SAAS platform on AWS.",
+        "Tracked and documented infrastructure projects and Helpdesk tickets using Jira and Confluence."
+      ]
+    },
+    {
+      "name": "Fusion Labs",
+      "position": "Software Developer I",
+      "startDate": "2010-04",
+      "endDate": "2012-05",
+      "summary": "Assisted with legacy migrations and non-profit product implementations.",
+      "highlights": [
+        "Analyzed legacy VB6 WinForms for Blackbaud and engineered replacement .NET web applications.",
+        "Co-developed 'GrantedGE' application to target identified market opportunities.",
+        "Traveled nationwide to assist non-profit clients with technical implementations and product integrations."
+      ]
+    },
+    {
+      "name": "Fusion Labs",
+      "position": "Windows Network Administrator",
+      "startDate": "2008-01",
+      "endDate": "2010-03",
+      "summary": "Monitored, maintained, and upgraded all Microsoft-related components of core datacenters and network client accounts.",
+      "highlights": [
+        "Provided extensive on-site infrastructure services traveling across coast-to-coast client accounts."
+      ]
+    },
+    {
+      "name": "Fusion Labs",
+      "position": "Datacenter Operator",
+      "startDate": "2005-11",
+      "endDate": "2008-01",
+      "summary": "Managed multi-site datacenter operations, hardware provisioning, and critical support ticket management.",
+      "highlights": [
+        "Installed, configured, and repaired physical server units (power supplies, RAIDs, cable routing, crash mitigation).",
+        "Deployed racks and network-enabled UPS backup units across datacenters.",
+        "Managed physical backup tapes and coordinated offsite storage rotations with Iron Mountain.",
+        "Handled access control, change management policies, shift summaries, and customer break-fix requests."
+      ]
+    },
+    {
+      "name": "RealPage, Inc.",
+      "position": "Implementation Staff Consultant",
+      "startDate": "2001-07",
+      "endDate": "2004-11",
+      "summary": "Started in Data Migrations and advanced to Team Lead before joining the implementation team.",
+      "highlights": [
+        "Partnered with Engineering to automate data migration processes, reducing required headcount from 20 to 6 people.",
+        "Collaborated with sales departments, remote consultants, trainers, and handled escalations for direct customer support.",
+        "Developed a comprehensive Microsoft Project tracking template to improve resource and timeline visibility for the OneSite sales pipeline."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Western Governors University (WGU)",
+      "area": "Information Technology",
+      "studyType": "Bachelor of Science",
+      "startDate": "2022",
+      "endDate": "2025-12",
+      "score": "",
+      "courses": []
+    }
+  ],
+  "awards": [
+    {
+      "title": "People's Choice Award (On-site)",
+      "date": "2015",
+      "awarder": "Zilliant",
+      "summary": "Acknowledged by peers for being creative, supportive, and developing strong working relationships."
+    },
+    {
+      "title": "People's Choice Award (Remote)",
+      "date": "2020",
+      "awarder": "Zilliant",
+      "summary": "Acknowledged by peers for remote collaboration excellence and supportive leadership."
+    }
+  ],
+  "certificates": [
+    {
+      "name": "Salesforce Certified Administrator (ADM201)",
+      "issuer": "Salesforce"
+    },
+    {
+      "name": "Salesforce Certified Associate",
+      "issuer": "Salesforce"
+    },
+    {
+      "name": "AWS Certified Cloud Practitioner",
+      "issuer": "Amazon Web Services"
+    },
+    {
+      "name": "CompTIA A+ CE",
+      "issuer": "CompTIA"
+    },
+    {
+      "name": "CompTIA Network+ CE",
+      "issuer": "CompTIA"
+    },
+    {
+      "name": "CompTIA Security+ CE",
+      "issuer": "CompTIA"
+    },
+    {
+      "name": "ITIL 4 Foundation \u2013 IT Service Management",
+      "issuer": "AXELOS"
+    },
+    {
+      "name": "Linux Essentials Certification",
+      "issuer": "LPI"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Cloud Infrastructure",
+      "level": "Expert",
+      "keywords": [
+        "AWS",
+        "EC2",
+        "Salesforce Org Management",
+        "Rackspace",
+        "SaaS Migration"
+      ]
+    },
+    {
+      "name": "Systems & Database Administration",
+      "level": "Expert",
+      "keywords": [
+        "Windows Network Administration",
+        "Datacenter Operations",
+        "SQL Server",
+        "Database Administration",
+        "RAID",
+        "UPS"
+      ]
+    },
+    {
+      "name": "DevOps & Methodology",
+      "level": "Advanced",
+      "keywords": [
+        "Agile Development",
+        "Scrum Standups",
+        "Jira",
+        "Confluence",
+        "KPI Management",
+        "Change Management"
+      ]
+    },
+    {
+      "name": "Software & Scripting",
+      "level": "Intermediate",
+      "keywords": [
+        "Automation Scripting",
+        "VB6 WinForms Migration",
+        ".NET Web Pages",
+        "Microsoft Project"
+      ]
+    }
+  ],
+  "languages": [
+    {
+      "language": "English",
+      "fluency": "Native"
+    }
+  ]
+}

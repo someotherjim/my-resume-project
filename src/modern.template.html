@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Resume Layout</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fff; color: #444; line-height: 1.5; margin: 40px auto; max-width: 850px; padding: 0 20px; }
+        header { border-left: 5px solid #009688; padding-left: 20px; margin-bottom: 30px; }
+        h1 { font-size: 2.8rem; margin: 0; color: #111; letter-spacing: -1px; }
+        h2 { font-size: 1.2rem; text-transform: uppercase; color: #009688; margin-top: 40px; margin-bottom: 15px; letter-spacing: 1.5px; }
+        .contact-info { color: #777; margin-top: 5px; font-size: 0.9rem; }
+        .job, .edu { margin-bottom: 25px; position: relative; padding-left: 15px; border-left: 2px solid #eee; }
+        .job-header, .edu-header { display: flex; justify-content: space-between; font-weight: 600; color: #222; }
+        .position, .study { font-weight: 400; color: #666; font-size: 0.95rem; }
+        ul { padding-left: 20px; margin-top: 8px; color: #555; }
+        li { margin-bottom: 6px; }
+        .skills-list { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0; }
+        .skills-list li { background: #e0f2f1; padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; color: #004d40; font-weight: 500; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 id="res-name"></h1>
+        <div id="res-label" style="font-size:1.3rem; color:#555;"></div>
+        <div class="contact-info" id="res-contact"></div>
+    </header>
+
+    <section>
+        <h2>Experience History</h2>
+        <div id="work-section"></div>
+    </section>
+
+    <section>
+        <h2>Education Background</h2>
+        <div id="edu-section"></div>
+    </section>
+
+    <section>
+        <h2>Core Skillsets</h2>
+        <ul class="skills-list" id="skills-section"></ul>
+    </section>
+</body>
+</html>

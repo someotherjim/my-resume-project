@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flat Template</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #fff; color: #2c3e50; line-height: 1.5; margin: 30px auto; max-width: 800px; padding: 0 20px; }
+        header { text-align: center; border-bottom: 3px solid #34495e; padding-bottom: 15px; margin-bottom: 25px; }
+        h1 { font-size: 2.4rem; margin: 0; color: #2c3e50; text-transform: uppercase; letter-spacing: 1px; }
+        h2 { font-size: 1.1rem; text-transform: uppercase; color: #2c3e50; background: #ecf0f1; padding: 6px 12px; margin-top: 25px; border-radius: 4px; }
+        .contact-info { color: #7f8c8d; font-size: 0.9rem; margin-top: 5px; }
+        .job, .edu { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px dashed #ebd3d300; }
+        .job-header, .edu-header { display: flex; justify-content: space-between; font-weight: bold; color: #34495e; }
+        .position, .study { font-weight: 600; color: #e67e22; font-size: 0.95rem; }
+        ul { padding-left: 20px; margin-top: 5px; color: #555; }
+        li { margin-bottom: 4px; }
+        .skills-list { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0; }
+        .skills-list li { background: #34495e; color: white; padding: 4px 10px; border-radius: 3px; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 id="res-name"></h1>
+        <div id="res-label" style="font-size:1.1rem; color:#7f8c8d;"></div>
+        <div class="contact-info" id="res-contact"></div>
+    </header>
+    <section><h2>Experience</h2><div id="work-section"></div></section>
+    <section><h2>Education</h2><div id="edu-section"></div></section>
+    <section><h2>Skills</h2><ul class="skills-list" id="skills-section"></ul></section>
+</body>
+</html>

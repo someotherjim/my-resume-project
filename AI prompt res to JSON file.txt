@@ -1,0 +1,21 @@
+Please convert my updated resume into a strictly valid schema-compliant file following the JSON Resume standard (jsonresume.org). 
+
+Here is my raw resume data:
+[PASTE TEXT OR ATTACH NEW RESUME FILE HERE]
+
+I also want to include a custom Projects section. Here are my project details:
+- Project Name: [e.g., Automated Salesforce Deployer]
+- Description: [e.g., Built an automated pipeline tool]
+- Highlights: [e.g., Bullet point 1, Bullet point 2]
+- Keywords/Tech Stack: [e.g., Python, AWS Lambda, Salesforce API]
+- URL (if any): [e.g., https://github.com]
+- Dates: [e.g., Jan 2025 - Mar 2025]
+
+To help map the data perfectly, use these specific formatting rules:
+1. Dates: Format all start and end dates as ISO 8601 strings (YYYY-MM-DD). If a role/project is ongoing, set endDate to "".
+2. Highlights: Convert descriptive bullet points under work and projects into individual string arrays under "highlights".
+3. Projects Section: Map my custom project details to the official top-level "projects" array schema. Ensure it uses keys like "name", "description", "highlights", "keywords", "url", "startDate", and "endDate".
+4. Certifications & Profiles: Map professional certifications to the "certificates" block, and social links to "basics.profiles".
+5. Skills: Categorize individual keywords into named skill objects with explicit keywords arrays.
+
+Please package this directly as a `resume.json` download.

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background: #fff; color: #333; line-height: 1.6; margin: 40px auto; max-width: 800px; padding: 0 20px; }
+        h1 { font-size: 2.5rem; margin-bottom: 5px; color: #111; }
+        h2 { font-size: 1.3rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 30px; border-bottom: 2px solid #eee; padding-bottom: 5px; color: #555; }
+        .contact-info { color: #666; margin-bottom: 20px; font-size: 0.95rem; }
+        .job, .edu { margin-bottom: 20px; }
+        .job-header, .edu-header { display: flex; justify-content: space-between; font-weight: bold; color: #222; }
+        .position, .study { font-style: italic; color: #555; }
+        ul { padding-left: 20px; margin-top: 5px; }
+        li { margin-bottom: 4px; }
+        .skills-list { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; }
+        .skills-list li { background: #f0f0f2; padding: 4px 10px; border-radius: 4px; font-size: 0.9rem; color: #444; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 id="res-name"></h1>
+        <div id="res-label" style="font-size:1.2rem; color:#0066cc; font-weight:bold;"></div>
+        <div class="contact-info" id="res-contact"></div>
+    </header>
+
+    <section>
+        <h2>Work Experience</h2>
+        <div id="work-section"></div>
+    </section>
+
+    <section>
+        <h2>Education</h2>
+        <div id="edu-section"></div>
+    </section>
+
+    <section>
+        <h2>Skills</h2>
+        <ul class="skills-list" id="skills-section"></ul>
+    </section>
+</body>
+</html>
