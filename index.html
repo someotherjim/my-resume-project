@@ -50,13 +50,13 @@
             
             try {
                 // 1. Fetch verified local data source
-                const dataResponse = await fetch('resume.json');
+                const dataResponse = await fetch('src/resume.json');
                 if (!dataResponse.ok) throw new Error("Missing resume.json file.");
                 const resume = await dataResponse.json();
 
                 // 2. Dynamically fetch the selected local layout template file
-                const templateResponse = await fetch(`${selectedTheme}.template.html`);
-                if (!templateResponse.ok) throw new Error(`Missing the file layout named ${selectedTheme}.template.html`);
+                const templateResponse = await fetch(`src/${selectedTheme}.template.html`);
+                if (!templateResponse.ok) throw new Error(`Missing the file layout named src/${selectedTheme}.template.html`);
                 const templateText = await templateResponse.text();
 
                 // 3. Set up memory document structure sandbox
@@ -67,7 +67,7 @@
                 if(resume.basics) {
                     doc.getElementById('res-name').innerText = resume.basics.name || '';
                     doc.getElementById('res-label').innerText = resume.basics.label || '';
-                    doc.getElementById('res-contact').innerText = `${resume.basics.email || ''} | ${resume.basics.phone || ''} | ${resume.basics.location?.city || ''}, ${resume.basics.location?.region || ''}`;
+                    doc.getElementById('res-contact').innerText = `src/${resume.basics.email || ''} | src/${resume.basics.phone || ''} | src/${resume.basics.location?.city || ''}, src/${resume.basics.location?.region || ''}`;
                 }
 
                 // 5. Build and Inject Work History Nodes
@@ -79,16 +79,16 @@
                         
                         let highlightsHtml = '';
                         if(job.highlights && Array.isArray(job.highlights)) {
-                            highlightsHtml = `<ul>${job.highlights.map(h => `<li>${h}</li>`).join('')}</ul>`;
+                            highlightsHtml = `<ul>src/${job.highlights.map(h => `<li>src/${h}</li>`).join('')}</ul>`;
                         }
 
                         jobDiv.innerHTML = `
                             <div class="job-header">
-                                <div>${job.name || ''}</div>
-                                <div>${job.startDate || ''} - ${job.endDate || 'Present'}</div>
+                                <div>src/${job.name || ''}</div>
+                                <div>src/${job.startDate || ''} - src/${job.endDate || 'Present'}</div>
                             </div>
-                            <div class="position">${job.position || ''}</div>
-                            ${highlightsHtml}
+                            <div class="position">src/${job.position || ''}</div>
+                            src/${highlightsHtml}
                         `;
                         workContainer.appendChild(jobDiv);
                     });
@@ -102,10 +102,10 @@
                         eduDiv.className = 'edu';
                         eduDiv.innerHTML = `
                             <div class="edu-header">
-                                <div>${edu.institution || ''}</div>
-                                <div>${edu.startDate || ''} - ${edu.endDate || ''}</div>
+                                <div>src/${edu.institution || ''}</div>
+                                <div>src/${edu.startDate || ''} - src/${edu.endDate || ''}</div>
                             </div>
-                            <div class="study">${edu.studyType || ''} in ${edu.area || ''}</div>
+                            <div class="study">src/${edu.studyType || ''} in src/${edu.area || ''}</div>
                         `;
                         eduContainer.appendChild(eduDiv);
                     });
