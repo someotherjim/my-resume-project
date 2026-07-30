@@ -55,7 +55,7 @@
                 const resume = await dataResponse.json();
 
                 // 2. Dynamically fetch the selected local layout template file
-                const templateResponse = await fetch(`src/${selectedTheme}.template.html`);
+                const templateResponse = await fetch(`src/${selectedTheme}.template.html?v=${Date.now()}`);
                 if (!templateResponse.ok) throw new Error(`Missing the file layout named src/${selectedTheme}.template.html`);
                 const templateText = await templateResponse.text();
 
@@ -67,28 +67,29 @@
                 if(resume.basics) {
                     doc.getElementById('res-name').innerText = resume.basics.name || '';
                     doc.getElementById('res-label').innerText = resume.basics.label || '';
-                    doc.getElementById('res-contact').innerText = `src/${resume.basics.email || ''} | src/${resume.basics.phone || ''} | src/${resume.basics.location?.city || ''}, src/${resume.basics.location?.region || ''}`;
+                    doc.getElementById('res-contact').innerText = `${resume.basics.email || ''} | ${resume.basics.phone || ''} | ${resume.basics.location?.city || ''}, ${resume.basics.location?.region || ''}`;
                 }
 
                 // 5. Build and Inject Work History Nodes
                 const workContainer = doc.getElementById('work-section');
-                if(resume.work && Array.isArray(resume.work)) {
+                if(workContainer && resume.work && Array.isArray(resume.work)) {
+                    workContainer.innerHTML = '';
                     resume.work.forEach(job => {
                         const jobDiv = doc.createElement('div');
                         jobDiv.className = 'job';
                         
                         let highlightsHtml = '';
                         if(job.highlights && Array.isArray(job.highlights)) {
-                            highlightsHtml = `<ul>src/${job.highlights.map(h => `<li>src/${h}</li>`).join('')}</ul>`;
+                            highlightsHtml = `<ul>${job.highlights.map(h => `<li>${h}</li>`).join('')}</ul>`;
                         }
 
                         jobDiv.innerHTML = `
                             <div class="job-header">
-                                <div>src/${job.name || ''}</div>
-                                <div>src/${job.startDate || ''} - src/${job.endDate || 'Present'}</div>
+                                <div>${job.name || ''}</div>
+                                <div>${job.startDate || ''} - ${job.endDate || 'Present'}</div>
                             </div>
-                            <div class="position">src/${job.position || ''}</div>
-                            src/${highlightsHtml}
+                            <div class="position">${job.position || ''}</div>
+                            ${highlightsHtml}
                         `;
                         workContainer.appendChild(jobDiv);
                     });
@@ -96,36 +97,66 @@
 
                 // 6. Build and Inject Education Array Nodes
                 const eduContainer = doc.getElementById('edu-section');
-                if(resume.education && Array.isArray(resume.education)) {
+                if(eduContainer && resume.education && Array.isArray(resume.education)) {
+                    eduContainer.innerHTML = '';
                     resume.education.forEach(edu => {
                         const eduDiv = doc.createElement('div');
                         eduDiv.className = 'edu';
                         eduDiv.innerHTML = `
                             <div class="edu-header">
-                                <div>src/${edu.institution || ''}</div>
-                                <div>src/${edu.startDate || ''} - src/${edu.endDate || ''}</div>
+                                <div>${edu.institution || ''}</div>
+                                <div>${edu.startDate || ''} - ${edu.endDate || ''}</div>
                             </div>
-                            <div class="study">src/${edu.studyType || ''} in src/${edu.area || ''}</div>
+                            <div class="study">${edu.studyType || ''} in ${edu.area || ''}</div>
                         `;
                         eduContainer.appendChild(eduDiv);
                     });
                 }
 
-                // 7. Inject Skills Keywords
+                // 7. Inject Categorized Skills (Balanced & Grouped)
                 const skillsContainer = doc.getElementById('skills-section');
-                if(resume.skills && Array.isArray(resume.skills)) {
+                if(skillsContainer && resume.skills && Array.isArray(resume.skills)) {
+                    skillsContainer.innerHTML = '';
                     resume.skills.forEach(skillGroup => {
                         if(skillGroup.keywords && Array.isArray(skillGroup.keywords)) {
-                            skillGroup.keywords.forEach(keyword => {
-                                const li = doc.createElement('li');
-                                li.innerText = keyword;
-                                skillsContainer.appendChild(li);
-                            });
+                            const groupDiv = doc.createElement('div');
+                            groupDiv.className = 'skill-group';
+                            groupDiv.style.marginBottom = '6px';
+                            
+                            const groupName = skillGroup.name ? `<strong>${skillGroup.name}:</strong> ` : '';
+                            const keywordsText = skillGroup.keywords.join(', ');
+                            
+                            groupDiv.innerHTML = `${groupName}${keywordsText}`;
+                            skillsContainer.appendChild(groupDiv);
                         }
                     });
                 }
 
-                // 8. Flush compiled document tree out to the visible iframe viewport
+				// 8. Inject Certificates Array Nodes (Fail-Safe)
+				const certContainer = doc.getElementById('cert-section');
+				if (certContainer) {
+					certContainer.innerHTML = ''; // Clear container
+					
+					if (resume.certificates && Array.isArray(resume.certificates) && resume.certificates.length > 0) {
+						resume.certificates.forEach(cert => {
+							const certDiv = doc.createElement('div');
+							certDiv.className = 'cert-item';
+							certDiv.style.marginBottom = '4px';
+							
+							const certName = cert.name || '';
+							const certIssuer = cert.issuer ? ` <span style="opacity: 0.75;">(${cert.issuer})</span>` : '';
+							
+							certDiv.innerHTML = `<strong>• ${certName}</strong>${certIssuer}`;
+							certContainer.appendChild(certDiv);
+						});
+					} else {
+						console.warn("Certificates key missing or empty in JSON");
+					}
+				} else {
+					console.warn("Element #cert-section not found in the selected template HTML!");
+				}
+
+                // 9. Flush compiled document tree out to the visible iframe viewport
                 const frameDoc = frame.contentWindow.document;
                 frameDoc.open();
                 frameDoc.write(doc.documentElement.innerHTML);
