@@ -17,6 +17,21 @@
         li { margin-bottom: 6px; }
         .skills-list { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0; }
         .skills-list li { background: #e0f2f1; padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; color: #004d40; font-weight: 500; }
+        .cert-list { list-style: none; padding: 0; }
+
+        /* Combined-employer grouped view: one employer block containing
+           multiple sub-positions, used when the "Grouping: Combined" toggle
+           is active on the control panel. */
+        .employer-group .sub-position { margin-top: 14px; padding-left: 14px; border-left: 2px solid #f0f0f0; }
+        .employer-group .sub-position:first-of-type { margin-top: 10px; }
+        .sub-position-header { display: flex; justify-content: space-between; font-weight: 500; color: #333; font-size: 0.95rem; }
+        .sub-position-dates { color: #888; font-size: 0.85rem; white-space: nowrap; }
+
+        @media print {
+            /* Keep an employer's combined block (all its sub-positions) from
+               splitting awkwardly across a page break. */
+            .job, .employer-group { page-break-inside: avoid; }
+        }
     </style>
 </head>
 <body>
@@ -36,14 +51,15 @@
         <div id="edu-section"></div>
     </section>
 	
+    <section>
+        <h2>Current Certifications</h2>
+        <div class="cert-list" id="cert-section"></div>
+    </section>
+	
 	<section>
         <h2>Core Skillsets</h2>
         <ul class="skills-list" id="skills-section"></ul>
     </section>
 
-    <section>
-        <h2>Current Certifications</h2>
-        <ul class="cert-list" id="cert-section"></ul>
-    </section>
 </body>
 </html>

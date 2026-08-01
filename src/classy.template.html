@@ -17,6 +17,20 @@
         li { margin-bottom: 5px; }
         .skills-list { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; padding: 0; font-family: Arial, sans-serif; }
         .skills-list li { border: 1px solid #1a252f; padding: 3px 8px; font-size: 0.85rem; color: #1a252f; }
+    
+        /* Combined-employer grouped view: one employer block containing
+           multiple sub-positions, used when the "Grouping: Combined" toggle
+           is active on the control panel. */
+        .employer-group .sub-position { margin-top: 14px; padding-left: 14px; border-left: 2px solid #f0f0f0; }
+        .employer-group .sub-position:first-of-type { margin-top: 10px; }
+        .sub-position-header { display: flex; justify-content: space-between; font-weight: 500; color: #333; font-size: 0.95rem; }
+        .sub-position-dates { color: #888; font-size: 0.85rem; white-space: nowrap; }
+
+        @media print {
+            /* Keep an employer's combined block (all its sub-positions) from
+               splitting awkwardly across a page break. */
+            .job, .employer-group { page-break-inside: avoid; }
+        }
     </style>
 </head>
 <body>
