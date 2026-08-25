@@ -1,3 +1,9 @@
 ## [Unreleased]
+### Fixed
+- Relocated `README.md` from `src/` to root directory for standard GitHub landing page visibility.
+
+### Added
+
 ### Changed
-- Updated `start.bat` to open Windows' User's default browser vs. chrome, specifically.
+
+### Fixed

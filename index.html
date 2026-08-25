@@ -13,6 +13,8 @@
         button.btn-primary:hover { background: #0052a3; }
         button.btn-success { background: #28a745; color: white; border: none; font-weight: bold; }
         button.btn-success:hover { background: #218838; }
+        button.btn-toggle { background: #f0f0f0; color: #444; border: 1px solid #ccc; font-weight: 600; transition: background 0.15s, color 0.15s; }
+        button.btn-toggle.active { background: #6f42c1; color: white; border-color: #6f42c1; }
         #viewer-frame { width: 100%; height: 85vh; border: 1px solid #ddd; border-radius: 8px; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         
         /* Ensure dashboard UI components don't accidentally leak into system print pipelines */
@@ -36,6 +38,7 @@
                 <option value="spartan">Spartan Theme (Ultra-Density Plain Text)</option>
             </select>
             <button class="btn-primary" onclick="compileResumeLocally()">Force Redraw</button>
+            <button class="btn-toggle" id="group-toggle-btn" onclick="toggleGrouping()">Employment Grouping</button>
         </div>
         <!-- Isolated Print Component Trigger -->
         <button class="btn-success" onclick="printResumeIsolated()">Print to PDF</button>
@@ -44,6 +47,59 @@
     <iframe id="viewer-frame" title="Resume Preview"></iframe>
 
     <script>
+        // Whether consecutive same-employer work entries render as one combined
+        // block (multiple sub-positions) instead of fully separate entries.
+        // Persisted across reloads via localStorage.
+        let groupByEmployer = localStorage.getItem('groupByEmployer') === 'true';
+
+        function toggleGrouping() {
+            groupByEmployer = !groupByEmployer;
+            localStorage.setItem('groupByEmployer', groupByEmployer);
+            updateGroupToggleButton();
+            compileResumeLocally();
+        }
+
+        function updateGroupToggleButton() {
+            const btn = document.getElementById('group-toggle-btn');
+            btn.textContent = groupByEmployer ? 'Grouping: Combined' : 'Grouping: Separate';
+            btn.classList.toggle('active', groupByEmployer);
+        }
+
+        // Merges consecutive resume.work entries that share the same employer
+        // name into a single group with multiple positions. Non-adjacent
+        // entries for the same employer (e.g. left and later rejoined) are
+        // intentionally NOT merged, since that's a different employment story.
+        // Assumes resume.work is ordered newest-first (standard JSON Resume
+        // convention), so group.positions[0] is the most recent role and
+        // group.positions[length-1] is the earliest.
+        function groupWorkByEmployer(workArray) {
+            const groups = [];
+            workArray.forEach(job => {
+                const last = groups[groups.length - 1];
+                if (last && last.name === job.name) {
+                    last.positions.push(job);
+                } else {
+                    groups.push({ name: job.name, positions: [job] });
+                }
+            });
+            return groups;
+        }
+
+        function buildHighlightsHtml(job) {
+            if (job.highlights && Array.isArray(job.highlights)) {
+                return `<ul>${job.highlights.map(h => `<li>${h}</li>`).join('')}</ul>`;
+            }
+            return '';
+        }
+
+        // Templates aren't consistent about whether skills/certs containers
+        // are <ul>/<ol> (needs <li> children) or a plain <div> (needs <div>
+        // children). Match whatever the template actually provides instead
+        // of hardcoding one or the other.
+        function isListContainer(el) {
+            return !!el && (el.tagName === 'UL' || el.tagName === 'OL');
+        }
+
         async function compileResumeLocally() {
             const frame = document.getElementById('viewer-frame');
             const selectedTheme = document.getElementById('theme-select').value;
@@ -55,7 +111,7 @@
                 const resume = await dataResponse.json();
 
                 // 2. Dynamically fetch the selected local layout template file
-                const templateResponse = await fetch(`src/${selectedTheme}.template.html`);
+                const templateResponse = await fetch(`src/${selectedTheme}.template.html?v=${Date.now()}`);
                 if (!templateResponse.ok) throw new Error(`Missing the file layout named src/${selectedTheme}.template.html`);
                 const templateText = await templateResponse.text();
 
@@ -67,65 +123,131 @@
                 if(resume.basics) {
                     doc.getElementById('res-name').innerText = resume.basics.name || '';
                     doc.getElementById('res-label').innerText = resume.basics.label || '';
-                    doc.getElementById('res-contact').innerText = `src/${resume.basics.email || ''} | src/${resume.basics.phone || ''} | src/${resume.basics.location?.city || ''}, src/${resume.basics.location?.region || ''}`;
+                    doc.getElementById('res-contact').innerText = `${resume.basics.email || ''} | ${resume.basics.phone || ''} | ${resume.basics.location?.city || ''}, ${resume.basics.location?.region || ''}`;
                 }
 
                 // 5. Build and Inject Work History Nodes
                 const workContainer = doc.getElementById('work-section');
-                if(resume.work && Array.isArray(resume.work)) {
-                    resume.work.forEach(job => {
-                        const jobDiv = doc.createElement('div');
-                        jobDiv.className = 'job';
-                        
-                        let highlightsHtml = '';
-                        if(job.highlights && Array.isArray(job.highlights)) {
-                            highlightsHtml = `<ul>src/${job.highlights.map(h => `<li>src/${h}</li>`).join('')}</ul>`;
-                        }
+                if(workContainer && resume.work && Array.isArray(resume.work)) {
+                    workContainer.innerHTML = '';
 
-                        jobDiv.innerHTML = `
-                            <div class="job-header">
-                                <div>src/${job.name || ''}</div>
-                                <div>src/${job.startDate || ''} - src/${job.endDate || 'Present'}</div>
-                            </div>
-                            <div class="position">src/${job.position || ''}</div>
-                            src/${highlightsHtml}
-                        `;
-                        workContainer.appendChild(jobDiv);
-                    });
+                    if (groupByEmployer) {
+                        // Combined view: one block per employer, sub-positions nested inside
+                        const groups = groupWorkByEmployer(resume.work);
+                        groups.forEach(group => {
+                            const groupDiv = doc.createElement('div');
+                            groupDiv.className = 'job employer-group';
+
+                            const mostRecent = group.positions[0];
+                            const earliest = group.positions[group.positions.length - 1];
+                            const overallStart = earliest.startDate || '';
+                            const overallEnd = mostRecent.endDate || 'Present';
+
+                            let positionsHtml = '';
+                            group.positions.forEach(job => {
+                                positionsHtml += `
+                                    <div class="sub-position">
+                                        <div class="sub-position-header">
+                                            <div class="position">${job.position || ''}</div>
+                                            <div class="sub-position-dates">${job.startDate || ''} - ${job.endDate || 'Present'}</div>
+                                        </div>
+                                        ${buildHighlightsHtml(job)}
+                                    </div>
+                                `;
+                            });
+
+                            groupDiv.innerHTML = `
+                                <div class="job-header employer-header">
+                                    <div>${group.name || ''}</div>
+                                    <div>${overallStart} - ${overallEnd}</div>
+                                </div>
+                                ${positionsHtml}
+                            `;
+                            workContainer.appendChild(groupDiv);
+                        });
+                    } else {
+                        // Separate view: every position is its own fully independent entry (original behavior)
+                        resume.work.forEach(job => {
+                            const jobDiv = doc.createElement('div');
+                            jobDiv.className = 'job';
+
+                            jobDiv.innerHTML = `
+                                <div class="job-header">
+                                    <div>${job.name || ''}</div>
+                                    <div>${job.startDate || ''} - ${job.endDate || 'Present'}</div>
+                                </div>
+                                <div class="position">${job.position || ''}</div>
+                                ${buildHighlightsHtml(job)}
+                            `;
+                            workContainer.appendChild(jobDiv);
+                        });
+                    }
                 }
 
                 // 6. Build and Inject Education Array Nodes
                 const eduContainer = doc.getElementById('edu-section');
-                if(resume.education && Array.isArray(resume.education)) {
+                if(eduContainer && resume.education && Array.isArray(resume.education)) {
+                    eduContainer.innerHTML = '';
                     resume.education.forEach(edu => {
                         const eduDiv = doc.createElement('div');
                         eduDiv.className = 'edu';
                         eduDiv.innerHTML = `
                             <div class="edu-header">
-                                <div>src/${edu.institution || ''}</div>
-                                <div>src/${edu.startDate || ''} - src/${edu.endDate || ''}</div>
+                                <div>${edu.institution || ''}</div>
+                                <div>${edu.startDate || ''} - ${edu.endDate || ''}</div>
                             </div>
-                            <div class="study">src/${edu.studyType || ''} in src/${edu.area || ''}</div>
+                            <div class="study">${edu.studyType || ''} in ${edu.area || ''}</div>
                         `;
                         eduContainer.appendChild(eduDiv);
                     });
                 }
 
-                // 7. Inject Skills Keywords
+                // 7. Inject Categorized Skills (Balanced & Grouped)
                 const skillsContainer = doc.getElementById('skills-section');
-                if(resume.skills && Array.isArray(resume.skills)) {
+                if(skillsContainer && resume.skills && Array.isArray(resume.skills)) {
+                    skillsContainer.innerHTML = '';
+                    const skillsTag = isListContainer(skillsContainer) ? 'li' : 'div';
                     resume.skills.forEach(skillGroup => {
                         if(skillGroup.keywords && Array.isArray(skillGroup.keywords)) {
-                            skillGroup.keywords.forEach(keyword => {
-                                const li = doc.createElement('li');
-                                li.innerText = keyword;
-                                skillsContainer.appendChild(li);
-                            });
+                            const groupItem = doc.createElement(skillsTag);
+                            groupItem.className = 'skill-group';
+                            groupItem.style.marginBottom = '6px';
+                            
+                            const groupName = skillGroup.name ? `<strong>${skillGroup.name}:</strong> ` : '';
+                            const keywordsText = skillGroup.keywords.join(', ');
+                            
+                            groupItem.innerHTML = `${groupName}${keywordsText}`;
+                            skillsContainer.appendChild(groupItem);
                         }
                     });
                 }
 
-                // 8. Flush compiled document tree out to the visible iframe viewport
+				// 8. Inject Certificates Array Nodes (Fail-Safe)
+				const certContainer = doc.getElementById('cert-section');
+				if (certContainer) {
+					certContainer.innerHTML = ''; // Clear container
+					
+					if (resume.certificates && Array.isArray(resume.certificates) && resume.certificates.length > 0) {
+						const certTag = isListContainer(certContainer) ? 'li' : 'div';
+						resume.certificates.forEach(cert => {
+							const certItem = doc.createElement(certTag);
+							certItem.className = 'cert-item';
+							certItem.style.marginBottom = '4px';
+							
+							const certName = cert.name || '';
+							const certIssuer = cert.issuer ? ` <span style="opacity: 0.75;">(${cert.issuer})</span>` : '';
+							
+							certItem.innerHTML = `<strong>• ${certName}</strong>${certIssuer}`;
+							certContainer.appendChild(certItem);
+						});
+					} else {
+						console.warn("Certificates key missing or empty in JSON");
+					}
+				} else {
+					console.warn("Element #cert-section not found in the selected template HTML!");
+				}
+
+                // 9. Flush compiled document tree out to the visible iframe viewport
                 const frameDoc = frame.contentWindow.document;
                 frameDoc.open();
                 frameDoc.write(doc.documentElement.innerHTML);
@@ -148,7 +270,10 @@
             }
         }
 
-        window.onload = compileResumeLocally;
+        window.onload = function() {
+            updateGroupToggleButton();
+            compileResumeLocally();
+        };
     </script>
 </body>
 </html>
