@@ -17,19 +17,19 @@ An interactive, client-side web application designed to render professional resu
 
 ```text
 my-resume-project/
-├── AI prompt res to JSON file # Creates JSON file from existing resume.txt
-└──src
-	├── .gitignore             # Git ignore rules for OS and temporary files
-	├── CHANGELOG.md           # Version history and change tracking
-	├── README.md              # Project documentation
-	├── start_resume.bat       # Local batch launcher script
-	├── index.html             # Core application HTML container with .js
-	├── classy.template.html   # Classy design theme
-	├── elegant.template.html  # Elegant design theme
-	├── flat.template.html     # Basic resume theme
-	├── modern.template.html   # Modern design theme
-	├── spartan.template.html  # Traditional design theme  
-	└── resume.json            # Central JSON data file for resume content
+├── AI prompt res to JSON file # Created JSON file from existing resume.txt
+├── CHANGELOG.md
+├── index.html
+├── LICENSE
+├── README.md
+├── start_resume.bat
+└───src
+    ├── classy.template.html
+    ├── elegant.template.html
+    ├── flat.template.html
+    ├── modern.template.html
+    ├── resume.json
+    └───spartan.template.html
 ```
 
 ---
