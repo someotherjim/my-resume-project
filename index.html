@@ -16,7 +16,7 @@
         button.btn-toggle { background: #f0f0f0; color: #444; border: 1px solid #ccc; font-weight: 600; transition: background 0.15s, color 0.15s; }
         button.btn-toggle.active { background: #6f42c1; color: white; border-color: #6f42c1; }
         #viewer-frame { width: 100%; height: 85vh; border: 1px solid #ddd; border-radius: 8px; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        
+
         /* Ensure dashboard UI components don't accidentally leak into system print pipelines */
         @media print {
             .control-panel { display: none !important; }
@@ -67,8 +67,7 @@
 
         // Merges consecutive resume.work entries that share the same employer
         // name into a single group with multiple positions. Non-adjacent
-        // entries for the same employer (e.g. left and later rejoined) are
-        // intentionally NOT merged, since that's a different employment story.
+        // entries for the same employer are intentionally NOT merged.
         // Assumes resume.work is ordered newest-first (standard JSON Resume
         // convention), so group.positions[0] is the most recent role and
         // group.positions[length-1] is the earliest.
@@ -94,20 +93,61 @@
 
         // Templates aren't consistent about whether skills/certs containers
         // are <ul>/<ol> (needs <li> children) or a plain <div> (needs <div>
-        // children). Match whatever the template actually provides instead
-        // of hardcoding one or the other.
+        // children). Match whatever the template actually provides.
         function isListContainer(el) {
             return !!el && (el.tagName === 'UL' || el.tagName === 'OL');
+        }
+
+        // Null-safe text injection: a template missing an element is skipped
+        // with a console warning instead of killing the whole render.
+        function setText(doc, id, text) {
+            const el = doc.getElementById(id);
+            if (el) {
+                el.textContent = text || '';
+            } else {
+                console.warn(`Template has no #${id}; skipping`);
+            }
+        }
+
+        // Summary works with ANY template. If the template provides
+        // #res-summary, it is used (so a theme can style it itself). If not,
+        // a "Summary" section is inserted right after the <header>, and it
+        // inherits the theme's own h2 / body styling.
+        function injectSummary(doc, summaryText) {
+            let el = doc.getElementById('res-summary');
+
+            if (!summaryText) {
+                // No summary in the JSON: remove any placeholder the template has
+                const wrap = doc.getElementById('summary-wrap');
+                if (wrap) wrap.remove();
+                else if (el) el.remove();
+                return;
+            }
+
+            if (!el) {
+                const section = doc.createElement('section');
+                section.id = 'summary-wrap';
+                section.innerHTML = '<h2>Summary</h2><p id="res-summary" class="summary" style="margin:0;"></p>';
+
+                const header = doc.querySelector('header');
+                if (header) {
+                    header.insertAdjacentElement('afterend', section);
+                } else {
+                    doc.body.insertBefore(section, doc.body.firstChild);
+                }
+                el = section.querySelector('#res-summary');
+            }
+            el.textContent = summaryText;
         }
 
         async function compileResumeLocally() {
             const frame = document.getElementById('viewer-frame');
             const selectedTheme = document.getElementById('theme-select').value;
-            
+
             try {
                 // 1. Fetch verified local data source
                 const dataResponse = await fetch('src/resume.json');
-                if (!dataResponse.ok) throw new Error("Missing resume.json file.");
+                if (!dataResponse.ok) throw new Error("Missing src/resume.json file.");
                 const resume = await dataResponse.json();
 
                 // 2. Dynamically fetch the selected local layout template file
@@ -120,15 +160,24 @@
                 const doc = parser.parseFromString(templateText, 'text/html');
 
                 // 4. Inject Basics Segment Map
-                if(resume.basics) {
-                    doc.getElementById('res-name').innerText = resume.basics.name || '';
-                    doc.getElementById('res-label').innerText = resume.basics.label || '';
-                    doc.getElementById('res-contact').innerText = `${resume.basics.email || ''} | ${resume.basics.phone || ''} | ${resume.basics.location?.city || ''}, ${resume.basics.location?.region || ''}`;
+                if (resume.basics) {
+                    const b = resume.basics;
+                    setText(doc, 'res-name', b.name);
+                    setText(doc, 'res-label', b.label);
+
+                    // Print header / default PDF filename come from the document title
+                    doc.title = (b.title || ((b.name || 'Resume') + ' - Resume'));
+
+                    const place = [b.location?.city, b.location?.region].filter(Boolean).join(', ');
+                    const contact = [b.email, b.phone, place].filter(Boolean).join(' | ');
+                    setText(doc, 'res-contact', contact);
+
+                    injectSummary(doc, b.summary);
                 }
 
                 // 5. Build and Inject Work History Nodes
                 const workContainer = doc.getElementById('work-section');
-                if(workContainer && resume.work && Array.isArray(resume.work)) {
+                if (workContainer && resume.work && Array.isArray(resume.work)) {
                     workContainer.innerHTML = '';
 
                     if (groupByEmployer) {
@@ -166,7 +215,7 @@
                             workContainer.appendChild(groupDiv);
                         });
                     } else {
-                        // Separate view: every position is its own fully independent entry (original behavior)
+                        // Separate view: every position is its own fully independent entry
                         resume.work.forEach(job => {
                             const jobDiv = doc.createElement('div');
                             jobDiv.className = 'job';
@@ -186,7 +235,7 @@
 
                 // 6. Build and Inject Education Array Nodes
                 const eduContainer = doc.getElementById('edu-section');
-                if(eduContainer && resume.education && Array.isArray(resume.education)) {
+                if (eduContainer && resume.education && Array.isArray(resume.education)) {
                     eduContainer.innerHTML = '';
                     resume.education.forEach(edu => {
                         const eduDiv = doc.createElement('div');
@@ -204,56 +253,59 @@
 
                 // 7. Inject Categorized Skills (Balanced & Grouped)
                 const skillsContainer = doc.getElementById('skills-section');
-                if(skillsContainer && resume.skills && Array.isArray(resume.skills)) {
+                if (skillsContainer && resume.skills && Array.isArray(resume.skills)) {
                     skillsContainer.innerHTML = '';
                     const skillsTag = isListContainer(skillsContainer) ? 'li' : 'div';
                     resume.skills.forEach(skillGroup => {
-                        if(skillGroup.keywords && Array.isArray(skillGroup.keywords)) {
+                        if (skillGroup.keywords && Array.isArray(skillGroup.keywords)) {
                             const groupItem = doc.createElement(skillsTag);
                             groupItem.className = 'skill-group';
                             groupItem.style.marginBottom = '6px';
-                            
+
                             const groupName = skillGroup.name ? `<strong>${skillGroup.name}:</strong> ` : '';
                             const keywordsText = skillGroup.keywords.join(', ');
-                            
+
                             groupItem.innerHTML = `${groupName}${keywordsText}`;
                             skillsContainer.appendChild(groupItem);
                         }
                     });
                 }
 
-				// 8. Inject Certificates Array Nodes (Fail-Safe)
-				const certContainer = doc.getElementById('cert-section');
-				if (certContainer) {
-					certContainer.innerHTML = ''; // Clear container
-					
-					if (resume.certificates && Array.isArray(resume.certificates) && resume.certificates.length > 0) {
-						const certTag = isListContainer(certContainer) ? 'li' : 'div';
-						resume.certificates.forEach(cert => {
-							const certItem = doc.createElement(certTag);
-							certItem.className = 'cert-item';
-							certItem.style.marginBottom = '4px';
-							
-							const certName = cert.name || '';
-							const certIssuer = cert.issuer ? ` <span style="opacity: 0.75;">(${cert.issuer})</span>` : '';
-							
-							certItem.innerHTML = `<strong>• ${certName}</strong>${certIssuer}`;
-							certContainer.appendChild(certItem);
-						});
-					} else {
-						console.warn("Certificates key missing or empty in JSON");
-					}
-				} else {
-					console.warn("Element #cert-section not found in the selected template HTML!");
-				}
+                // 8. Inject Certificates Array Nodes (Fail-Safe)
+                const certContainer = doc.getElementById('cert-section');
+                if (certContainer) {
+                    certContainer.innerHTML = '';
+
+                    if (resume.certificates && Array.isArray(resume.certificates) && resume.certificates.length > 0) {
+                        const isList = isListContainer(certContainer);
+                        const certTag = isList ? 'li' : 'div';
+                        // List containers already draw their own bullets; only add a manual one for plain divs
+                        const bullet = isList ? '' : '\u2022 ';
+                        resume.certificates.forEach(cert => {
+                            const certItem = doc.createElement(certTag);
+                            certItem.className = 'cert-item';
+                            certItem.style.marginBottom = '4px';
+
+                            const certName = cert.name || '';
+                            const certIssuer = cert.issuer ? ` <span style="opacity: 0.75;">(${cert.issuer})</span>` : '';
+
+                            certItem.innerHTML = `<strong>${bullet}${certName}</strong>${certIssuer}`;
+                            certContainer.appendChild(certItem);
+                        });
+                    } else {
+                        console.warn("Certificates key missing or empty in JSON");
+                    }
+                } else {
+                    console.warn("Element #cert-section not found in the selected template HTML!");
+                }
 
                 // 9. Flush compiled document tree out to the visible iframe viewport
-                const frameDoc = frame.contentWindow.document;
-                frameDoc.open();
-                frameDoc.write(doc.documentElement.innerHTML);
-                frameDoc.close();
+                const html = '<!DOCTYPE html>' + doc.documentElement.outerHTML;
+                console.log('Compiled body length:', doc.body ? doc.body.innerHTML.length : 'no body', '| total html length:', html.length);
+                frame.srcdoc = html;
 
             } catch (error) {
+                console.error(error);
                 alert("Render Error: " + error.message);
             }
         }
@@ -262,7 +314,6 @@
         function printResumeIsolated() {
             const frameNode = document.getElementById('viewer-frame');
             if (frameNode) {
-                // Focus the internal workspace frame and trigger print window natively
                 frameNode.contentWindow.focus();
                 frameNode.contentWindow.print();
             } else {

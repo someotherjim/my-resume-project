@@ -10,6 +10,7 @@
         h1 { font-size: 2.6rem; font-weight: normal; margin: 0; color: #1a252f; }
         h2 { font-size: 1.1rem; text-transform: uppercase; letter-spacing: 2px; color: #1a252f; margin-top: 35px; margin-bottom: 15px; font-family: Arial, sans-serif; font-weight: bold; }
         .contact-info { color: #555; font-size: 0.9rem; font-style: italic; font-family: Arial, sans-serif; margin-top: 5px; }
+        .summary-text { font-size: 1rem; color: #333; line-height: 1.6; font-style: normal; margin-bottom: 25px; }
         .job, .edu { margin-bottom: 22px; }
         .job-header, .edu-header { display: flex; justify-content: space-between; font-family: Arial, sans-serif; font-weight: bold; font-size: 0.95rem; }
         .position, .study { font-style: italic; color: #444; margin-bottom: 4px; }
@@ -18,17 +19,12 @@
         .skills-list { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; padding: 0; font-family: Arial, sans-serif; }
         .skills-list li { border: 1px solid #1a252f; padding: 3px 8px; font-size: 0.85rem; color: #1a252f; }
     
-        /* Combined-employer grouped view: one employer block containing
-           multiple sub-positions, used when the "Grouping: Combined" toggle
-           is active on the control panel. */
         .employer-group .sub-position { margin-top: 14px; padding-left: 14px; border-left: 2px solid #f0f0f0; }
         .employer-group .sub-position:first-of-type { margin-top: 10px; }
         .sub-position-header { display: flex; justify-content: space-between; font-weight: 500; color: #333; font-size: 0.95rem; }
         .sub-position-dates { color: #888; font-size: 0.85rem; white-space: nowrap; }
 
         @media print {
-            /* Keep an employer's combined block (all its sub-positions) from
-               splitting awkwardly across a page break. */
             .job, .employer-group { page-break-inside: avoid; }
         }
     </style>
@@ -39,9 +35,11 @@
         <div id="res-label" style="font-size:1.1rem; font-style: italic; font-family: Arial, sans-serif;"></div>
         <div class="contact-info" id="res-contact"></div>
     </header>
+
+    <section id="summary-container"><h2>Summary</h2><div class="summary-text" id="res-summary"></div></section>
+    <section><h2>Professional Core Skills</h2><ul class="skills-list" id="skills-section"></ul></section>
     <section><h2>Employment History</h2><div id="work-section"></div></section>
     <section><h2>Education</h2><div id="edu-section"></div></section>
     <section><h2>Certifications</h2><div class="cert-list" id="cert-section"></div></section>
-    <section><h2>Professional Core Skills</h2><ul class="skills-list" id="skills-section"></ul></section>
 </body>
 </html>

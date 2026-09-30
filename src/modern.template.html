@@ -10,6 +10,7 @@
         h1 { font-size: 2.8rem; margin: 0; color: #111; letter-spacing: -1px; }
         h2 { font-size: 1.2rem; text-transform: uppercase; color: #009688; margin-top: 40px; margin-bottom: 15px; letter-spacing: 1.5px; }
         .contact-info { color: #777; margin-top: 5px; font-size: 0.9rem; }
+		.summary-text { font-size: 1rem; color: #444; line-height: 1.6; margin-bottom: 20px; }
         .job, .edu { margin-bottom: 25px; position: relative; padding-left: 15px; border-left: 2px solid #eee; }
         .job-header, .edu-header { display: flex; justify-content: space-between; font-weight: 600; color: #222; }
         .position, .study { font-weight: 400; color: #666; font-size: 0.95rem; }
@@ -41,6 +42,16 @@
         <div class="contact-info" id="res-contact"></div>
     </header>
 
+    <section id="summary-container">
+        <h2>Summary</h2>
+        <p class="summary-text" id="res-summary"></p>
+    </section>
+
+	<section>
+        <h2>Core Skillsets</h2>
+        <ul class="skills-list" id="skills-section"></ul>
+    </section>
+
     <section>
         <h2>Experience History</h2>
         <div id="work-section"></div>
@@ -54,11 +65,6 @@
     <section>
         <h2>Current Certifications</h2>
         <div class="cert-list" id="cert-section"></div>
-    </section>
-	
-	<section>
-        <h2>Core Skillsets</h2>
-        <ul class="skills-list" id="skills-section"></ul>
     </section>
 
 </body>
