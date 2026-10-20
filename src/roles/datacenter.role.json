@@ -1,0 +1,31 @@
+{
+  "label": "Data Center Technician",
+  "summary": "Accomplished Information Technology professional with over 20 years of experience, spanning physical data center operations, server hardware lifecycle management, component-level troubleshooting, and cloud infrastructure. Proven track record of deploying, maintaining, and repairing enterprise server systems, managing hardware configurations, and collaborating with cross-functional teams to ensure maximum infrastructure uptime.",
+  "bullets": [
+    "fus-dc-hardware",
+    "fus-dc-racks-ups",
+    "fus-dc-tape-ironmountain",
+    "fus-dc-access-change-mgmt",
+    "fus-winadmin-onsite-infra",
+    "fus-dev-nonprofit-travel",
+	"fus-dev-vb6-to-net",
+    "rp-sales-escalations",
+	"rp-migration-automation",
+    "zil-ops-jira-confluence",
+    "zil-ops-rackspace-admin",
+    "zil-lead-best-practices",
+    "zil-lead-docs-kpis"
+  ],
+  "skills": [
+    "Systems & Database Administration",
+    "Cloud Infrastructure",
+    "DevOps & Methodology"
+  ],
+  "certificatesFirst": [
+    "CompTIA A+ CE",
+    "CompTIA Network+ CE",
+    "CompTIA Security+ CE",
+    "Linux Essentials Certification",
+    "ITIL 4 Foundation – IT Service Management"
+  ]
+}

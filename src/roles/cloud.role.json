@@ -1,0 +1,26 @@
+{
+  "label": "Cloud / DevOps Engineer",
+  "summary": "Cloud and DevOps professional with over 10 years of experience running AWS and Salesforce infrastructure at scale, including 500+ EC2 servers and hundreds of Salesforce orgs. Led an internationally dispersed team across EU and USA time zones and helped migrate a core product to a fully SaaS platform on AWS.",
+  "bullets": [
+    "zil-lead-best-practices",
+    "zil-lead-standups",
+    "zil-lead-stakeholders",
+    "zil-lead-docs-kpis",
+    "zil-ops-saas-aws-migration",
+    "zil-ops-rackspace-admin",
+    "zil-ops-jira-confluence",
+    "rp-migration-automation"
+  ],
+  "skills": [
+    "Cloud Infrastructure",
+    "DevOps & Methodology",
+    "Systems & Database Administration",
+    "Software & Scripting"
+  ],
+  "certificatesFirst": [
+    "AWS Certified Cloud Practitioner",
+    "Salesforce Certified Administrator (ADM201)",
+    "Salesforce Certified Associate",
+    "Linux Essentials Certification"
+  ]
+}

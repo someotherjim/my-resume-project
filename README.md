@@ -1,15 +1,15 @@
 # my-resume-project
 
-An interactive, client-side web application designed to render professional resumes dynamically from a centralized JSON data source. Users can toggle between various CSS themes via a dropdown menu and export/print their preferred resume layout cleanly.
+An interactive, client-side web application designed to render professional resumes dynamically from a centralized JSON data source. Users can toggle between various CSS themes via a dropdown menu and export/print their preferred resume layout cleanly. Advanced users can set up role JSON files that then dynamically replace bullets in resume to target a specific job role.
 
 ---
 
 ## 📸 Key Features
 
-* **JSON-Driven Resume Content**: Content is fully decoupled from presentation. Modify your resume data in a single JSON file (`resume-data.json`), and all layouts update automatically.
+* **JSON-Driven Resume Content**: Content is decoupled from presentation. Modify your resume data in a single JSON file (`resume.json`), and all layouts update automatically.
+* **Resume Role Switching**: Leveraging IDs and a secondary role JSON file, you can override the bulleted highlights of your default resume.
 * **Dynamic Theme Switching**: Easily switch between different CSS stylesheets on the fly using a UI dropdown menu.
 * **Print-Ready Styles**: Built-in `@media print` CSS rules ensure clean, single/multi-page PDF outputs without browser UI clutter or unnecessary margins.
-* **Local One-Click Launcher**: Includes a simple batch file (`start.bat`) that spins up a lightweight local Python HTTP server and automatically opens the application in your default browser.
 
 ---
 
@@ -17,45 +17,34 @@ An interactive, client-side web application designed to render professional resu
 
 ```text
 my-resume-project/
-├── AI prompt res to JSON file # Created JSON file from existing resume.txt
-├── CHANGELOG.md
-├── index.html
-├── LICENSE
-├── README.md
-├── start_resume.bat
-└───src
-    ├── classy.template.html
-    ├── elegant.template.html
-    ├── flat.template.html
-    ├── modern.template.html
-    ├── resume.json
-    └───spartan.template.html
+├── .gitignore		 # Exclusion rules for this project
+├── CHANGELOG.md     # Version history and change tracking
+├── index.html		 # Core application HTML container
+├── LICENSE			 # MIT Licensing details
+├── README.md		 # Project documentation
+└──src
+	├── classy.template.html	  # Classy design theme
+	├── elegant.template.html	  # Elegant design theme
+	├── flat.template.html		  # Basic resume theme
+	├── modern.template.html	  # Modern design theme
+	├── spartan.template.html     # Traditional design theme  
+	├── resume.json				  # Central JSON data file for resume content
+	└── roles
+		├── cloud.role.json			 # file that replaces role highlights whenever role IDs match
+		├── datacenter.role.json     # file that replaces role highlights whenever role IDs match
+		├── dba.role.json			 # file that replaces role highlights whenever role IDs match
+		└── security.role.json		 # file that replaces role highlights whenever role IDs match
 ```
 
 ---
 
 ## 🚀 Quick Start & Usage
 
-### Prerequisites
-* **Python 3.x** installed on your machine (required for local HTTP server execution).
-* **Git** (for version control).
-
-### Running the Application (Windows)
-Double-click **`start.bat`** or run it from your command line:
-
-```cmd
-start.bat
-```
-
-This script performs two actions:
-1. Starts a Python HTTP server on port `8000` (`python -m http.server 8000`).
-2. Opens chrome web browser to display `http://localhost:8000/index.html`.
-
----
+To view locally, serve the directory using your preferred static server (e.g., python3 -m http.server or VS Code Live Server).
 
 ## 🛠️ How It Works
 
-1. **Data Fetching**: When `index.html` loads, javascript fetches `data/resume-data.json` via asynchronous JavaScript (`fetch`).
+1. **Data Fetching**: When `index.html` loads, javascript fetches `data/resume.json` via asynchronous JavaScript (`fetch`).
 2. **Template Rendering**: The script parses sections (Work Experience, Education, Skills, Projects) and populates the DOM.
 3. **Theme Engine**: Selecting an option from the dropdown menu updates the `<link id="theme-stylesheet" rel="stylesheet" href="...">` element dynamically, applying the selected CSS theme instantaneously.
 4. **Printing**: Click the **Print Resume** button or press `Ctrl + P` / `Cmd + P`. The print media queries isolate the resume container while hiding control elements (e.g., the theme selector bar).
@@ -64,7 +53,7 @@ This script performs two actions:
 
 ## 📋 JSON Schema Overview
 
-The resume structure is defined in `data/resume-data.json`. Example structure:
+The resume structure is inspired by , except it has Example structure:
 
 ```json
 {
@@ -83,8 +72,14 @@ The resume structure is defined in `data/resume-data.json`. Example structure:
       "startDate": "2020",
       "endDate": "Present",
       "highlights": [
-        "Implemented CI/CD pipelines.",
-        "Managed enterprise deployments."
+        {
+          "id": "tec-lead-standups",
+          "text": "Ran daily standups and served as an Engineering contact point for high-profile customer project resolutions."
+        },
+        {
+          "id": "tec-lead-stakeholders",
+          "text": "Coordinated with executive leadership and stakeholders to ensure proper task prioritization and tool management."
+        }
       ]
     }
   ],

@@ -4,7 +4,7 @@
     "label": "TechOps Lead / DevOps Engineer",
     "email": "not for GitHub",
     "phone": "not for GitHub",
-    "url": "https://www.linkedin.com/in/jameshofmannjimpst",
+    "url": "https://jimhofmann.io",
     "summary": "Versatile and accomplished Information Technology professional with over 10 years of experience. Proven track record in leading international teams, managing cloud infrastructure (AWS/Salesforce), automation scripting, database administration, and agile software development.",
     "location": {
       "city": "Sparks",
@@ -27,10 +27,22 @@
       "endDate": "2022-07",
       "summary": "Led an internationally dispersed team across EU and USA time zones, managing hundreds of Salesforce orgs and an AWS backend of over 500 EC2 servers and 1000+ databases.",
       "highlights": [
-        "Ran daily standups and served as an Engineering contact point for high-profile customer project resolutions.",
-        "Coordinated with executive leadership and stakeholders to ensure proper task prioritization and tool management.",
-        "Established procedural Best Practices by compiling infrastructure recommendations from AWS, Red9, and Microsoft.",
-        "Provided extensive technical writing, reports, and ensured internal service KPI commitments were met."
+        {
+          "id": "zil-lead-standups",
+          "text": "Ran daily standups and served as an Engineering contact point for high-profile customer project resolutions."
+        },
+        {
+          "id": "zil-lead-stakeholders",
+          "text": "Coordinated with executive leadership and stakeholders to ensure proper task prioritization and tool management."
+        },
+        {
+          "id": "zil-lead-best-practices",
+          "text": "Established procedural Best Practices by compiling infrastructure recommendations from AWS, Red9, and Microsoft."
+        },
+        {
+          "id": "zil-lead-docs-kpis",
+          "text": "Provided extensive technical writing, reports, and ensured internal service KPI commitments were met."
+        }
       ]
     },
     {
@@ -40,9 +52,18 @@
       "endDate": "2014-03",
       "summary": "Supported a rapidly growing software company through systems administration and cloud infrastructure migration.",
       "highlights": [
-        "Administrated Rackspace assets including SQL, FTP, Application, DC, File, and Tableau servers.",
-        "Utilized modified Agile methodologies to help migrate the core product to a fully SAAS platform on AWS.",
-        "Tracked and documented infrastructure projects and Helpdesk tickets using Jira and Confluence."
+        {
+          "id": "zil-ops-rackspace-admin",
+          "text": "Administrated Rackspace assets including SQL, FTP, Application, DC, File, and Tableau servers."
+        },
+        {
+          "id": "zil-ops-saas-aws-migration",
+          "text": "Utilized modified Agile methodologies to help migrate our core product to a fully SAAS platform on Salesforce with an AWS backend."
+        },
+        {
+          "id": "zil-ops-jira-confluence",
+          "text": "Tracked and documented infrastructure projects and Helpdesk tickets using Jira and Confluence."
+        }
       ]
     },
     {
@@ -52,9 +73,18 @@
       "endDate": "2012-05",
       "summary": "Assisted with legacy migrations and non-profit product implementations.",
       "highlights": [
-        "Analyzed legacy VB6 WinForms for Blackbaud and engineered replacement .NET web applications.",
-        "Co-developed 'GrantedGE' application to target identified market opportunities.",
-        "Traveled nationwide to assist non-profit clients with technical implementations and product integrations."
+        {
+          "id": "fus-dev-vb6-to-net",
+          "text": "Engineered replacement .NET web forms for BlackBaud, replacing their legacy VB6 WinForms."
+        },
+        {
+          "id": "fus-dev-grantedge",
+          "text": "Backend developer for 'GrantedGE' application."
+        },
+        {
+          "id": "fus-dev-nonprofit-travel",
+          "text": "Traveled nationwide to assist non-profit clients with technical implementations and product integrations."
+        }
       ]
     },
     {
@@ -64,7 +94,10 @@
       "endDate": "2010-03",
       "summary": "Monitored, maintained, and upgraded all Microsoft-related components of core datacenters and network client accounts.",
       "highlights": [
-        "Provided extensive on-site infrastructure services traveling across coast-to-coast client accounts."
+        {
+          "id": "fus-winadmin-onsite-infra",
+          "text": "Provided extensive on-site infrastructure and network administration services for the Communities Foundation of Texas and TSTEM."
+        }
       ]
     },
     {
@@ -74,10 +107,22 @@
       "endDate": "2008-01",
       "summary": "Managed multi-site datacenter operations, hardware provisioning, and critical support ticket management.",
       "highlights": [
-        "Installed, configured, and repaired physical server units (power supplies, RAIDs, cable routing, crash mitigation).",
-        "Deployed racks and network-enabled UPS backup units across datacenters.",
-        "Managed physical backup tapes and coordinated offsite storage rotations with Iron Mountain.",
-        "Handled access control, change management policies, shift summaries, and customer break-fix requests."
+        {
+          "id": "fus-dc-hardware",
+          "text": "Installed, configured, and repaired physical server units (power supplies, RAIDs, cable routing, crash mitigation)."
+        },
+        {
+          "id": "fus-dc-racks-ups",
+          "text": "Installed compute and network hardware in multiple datacenters."
+        },
+        {
+          "id": "fus-dc-tape-ironmountain",
+          "text": "Managed physical backup tapes and coordinated offsite storage rotations with Iron Mountain."
+        },
+        {
+          "id": "fus-dc-access-change-mgmt",
+          "text": "Handled access control, change management policies, escalations and coordinations, and unplanned break-fixes."
+        }
       ]
     },
     {
@@ -87,9 +132,18 @@
       "endDate": "2004-11",
       "summary": "Started in Data Migrations and advanced to Team Lead before joining the implementation team.",
       "highlights": [
-        "Partnered with Engineering to automate data migration processes, reducing required headcount from 20 to 6 people.",
-        "Collaborated with sales departments, remote consultants, trainers, and handled escalations for direct customer support.",
-        "Developed a comprehensive Microsoft Project tracking template to improve resource and timeline visibility for the OneSite sales pipeline."
+        {
+          "id": "rp-migration-automation",
+          "text": "Partnered with Engineering to automate data migration processes, reducing required headcount from 20 to 6 people."
+        },
+        {
+          "id": "rp-sales-escalations",
+          "text": "Collaborated with sales departments, remote consultants, trainers, and handled escalations for direct customer support."
+        },
+        {
+          "id": "rp-msproject-template",
+          "text": "Developed a comprehensive Microsoft Project tracking template to improve resource and timeline visibility for the OneSite sales pipeline."
+        }
       ]
     }
   ],

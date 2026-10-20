@@ -1,0 +1,15 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Local Utility & Automation Scripts
+*.bat
+*.ps1
+*.sh

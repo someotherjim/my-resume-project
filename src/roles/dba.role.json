@@ -1,0 +1,26 @@
+{
+  "label": "Database / Systems Administrator",
+  "summary": "Systems and database professional with over 10 years of experience supporting SQL Server environments and large-scale cloud-hosted infrastructure, including an AWS backend with 1000+ databases. Background spans datacenter operations, Windows administration, and cloud migration, with a focus on reliability, documentation, and change management.",
+  "bullets": [
+    "zil-ops-rackspace-admin",
+    "zil-lead-best-practices",
+    "zil-lead-docs-kpis",
+    "zil-ops-saas-aws-migration",
+    "fus-winadmin-onsite-infra",
+    "fus-dc-hardware",
+    "fus-dc-tape-ironmountain",
+    "fus-dc-access-change-mgmt",
+    "rp-migration-automation"
+  ],
+  "skills": [
+    "Systems & Database Administration",
+    "Cloud Infrastructure",
+    "DevOps & Methodology",
+    "Software & Scripting"
+  ],
+  "certificatesFirst": [
+    "AWS Certified Cloud Practitioner",
+    "Linux Essentials Certification",
+    "ITIL 4 Foundation – IT Service Management"
+  ]
+}

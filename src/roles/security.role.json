@@ -1,0 +1,23 @@
+{
+  "label": "Infrastructure & Security",
+  "summary": "IT infrastructure professional with over 10 years of experience across datacenter, Windows, and cloud environments, holding CompTIA Security+, Network+, and A+ certifications. Experienced with access control, change management, and backup and offsite storage practices in multi-site datacenter operations.",
+  "bullets": [
+    "fus-dc-access-change-mgmt",
+    "fus-dc-tape-ironmountain",
+    "fus-dc-racks-ups",
+    "fus-winadmin-onsite-infra",
+    "zil-lead-best-practices",
+    "zil-lead-docs-kpis"
+  ],
+  "skills": [
+    "Systems & Database Administration",
+    "DevOps & Methodology",
+    "Cloud Infrastructure"
+  ],
+  "certificatesFirst": [
+    "CompTIA Security+ CE",
+    "CompTIA Network+ CE",
+    "CompTIA A+ CE",
+    "ITIL 4 Foundation – IT Service Management"
+  ]
+}
