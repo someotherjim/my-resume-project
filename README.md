@@ -1,6 +1,6 @@
 # my-resume-project
 
-An interactive, client-side web application designed to render professional resumes dynamically from a centralized JSON data source. Users can toggle between various CSS themes via a dropdown menu and export/print their preferred resume layout cleanly. Advanced users can set up role JSON files that then dynamically replace bullets in resume to target a specific job role.
+An interactive, client-side web application designed to render professional resumes dynamically from a centralized JSON data source. Users can toggle between various CSS themes via a dropdown menu and export/print their preferred resume layout cleanly. Advanced users can set up role JSON files that then dynamically replace bullets and summary in resume to target a specific job role.
 
 ---
 
@@ -17,23 +17,23 @@ An interactive, client-side web application designed to render professional resu
 
 ```text
 my-resume-project/
-├── .gitignore		 # Exclusion rules for this project
-├── CHANGELOG.md     # Version history and change tracking
-├── index.html		 # Core application HTML container
-├── LICENSE			 # MIT Licensing details
-├── README.md		 # Project documentation
-└──src
-	├── classy.template.html	  # Classy design theme
-	├── elegant.template.html	  # Elegant design theme
-	├── flat.template.html		  # Basic resume theme
-	├── modern.template.html	  # Modern design theme
-	├── spartan.template.html     # Traditional design theme  
-	├── resume.json				  # Central JSON data file for resume content
-	└── roles
-		├── cloud.role.json			 # file that replaces role highlights whenever role IDs match
-		├── datacenter.role.json     # file that replaces role highlights whenever role IDs match
-		├── dba.role.json			 # file that replaces role highlights whenever role IDs match
-		└── security.role.json		 # file that replaces role highlights whenever role IDs match
+├── .gitignore          # Exclusion rules for this project
+├── CHANGELOG.md        # Version history and change tracking
+├── index.html          # Core application HTML container
+├── LICENSE             # MIT Licensing details
+├── README.md           # Project documentation
+└── src
+    ├── classy.template.html         # Classy design theme
+    ├── elegant.template.html        # Elegant design theme
+    ├── flat.template.html           # Basic resume theme
+    ├── modern.template.html         # Modern design theme
+    ├── spartan.template.html        # Traditional design theme  
+    ├── resume.json                  # Central JSON data file for resume content
+    └── roles
+        ├── cloud.role.json             # file that replaces role highlights whenever role IDs match
+        ├── datacenter.role.json        # file that replaces role highlights whenever role IDs match
+        ├── dba.role.json               # file that replaces role highlights whenever role IDs match
+        └── security.role.json          # file that replaces role highlights whenever role IDs match
 ```
 
 ---
@@ -44,7 +44,7 @@ To view locally, serve the directory using your preferred static server (e.g., p
 
 ## 🛠️ How It Works
 
-1. **Data Fetching**: When `index.html` loads, javascript fetches `data/resume.json` via asynchronous JavaScript (`fetch`).
+1. **Data Fetching**: When `index.html` loads, javascript fetches `data/resume.json` via asynchronous JavaScript (`fetch`), and checks for matching custom role IDs.
 2. **Template Rendering**: The script parses sections (Work Experience, Education, Skills, Projects) and populates the DOM.
 3. **Theme Engine**: Selecting an option from the dropdown menu updates the `<link id="theme-stylesheet" rel="stylesheet" href="...">` element dynamically, applying the selected CSS theme instantaneously.
 4. **Printing**: Click the **Print Resume** button or press `Ctrl + P` / `Cmd + P`. The print media queries isolate the resume container while hiding control elements (e.g., the theme selector bar).
@@ -61,7 +61,7 @@ The resume structure is inspired by , except it has Example structure:
     "name": "Your Name",
     "label": "IT Professional & Systems Engineer",
     "email": "your.email@example.com",
-    "website": "https://yourdomain.com",
+    "website": "http://www.example.com",
     "location": "City, State"
   },
   "summary": "Experienced professional specializing in...",
@@ -91,7 +91,7 @@ The resume structure is inspired by , except it has Example structure:
 
 ## 📝 Development Workflow & CI/CD Best Practices
 
-This repository follows a standard feature-branch Git workflow:
+This repository aspires to follow a standard feature-branch Git workflow:
 
 1. **Create a Feature Branch**:
    ```bash
