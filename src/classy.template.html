@@ -24,8 +24,24 @@
         .sub-position-header { display: flex; justify-content: space-between; font-weight: 500; color: #333; font-size: 0.95rem; }
         .sub-position-dates { color: #888; font-size: 0.85rem; white-space: nowrap; }
 
-        @media print {
-            .job, .employer-group { page-break-inside: avoid; }
+	@media print {
+	    /* Keep job blocks intact */
+	    .job, .employer-group { 
+		page-break-inside: avoid; 
+	    }
+
+	    /* Target the list items with double-class specificity to beat earlier overrides */
+	    body .skills-list li,
+	    ul.skills-list li {
+            border: 1px solid #1a252f;
+	    padding: 3px 8px;
+	    font-size: 0.85rem;
+	    color: #1a252f;
+
+            display: inline-block !important; /* Ensures box geometry renders correctly */
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            }  
         }
     </style>
 </head>

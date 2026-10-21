@@ -31,7 +31,27 @@
             /* Keep an employer's combined block (all its sub-positions) from
                splitting awkwardly across a page break. */
             .job, .employer-group { page-break-inside: avoid; }
-        }
+			
+	@media print {
+	    /* Keep job blocks intact */
+	    .job, .employer-group { 
+		page-break-inside: avoid; 
+	    }
+
+	    /* Target the list items with double-class specificity to beat earlier overrides */
+	    body .skills-list li,
+	    ul.skills-list li {
+	    background: #34495e !important;
+	    color: white !important;
+	    padding: 4px 10px !important;
+	    border-radius: 3px !important;
+	    font-size: 0.85rem !important;
+
+		display: inline-block !important; /* Ensures box geometry renders correctly */
+		-webkit-print-color-adjust: exact !important;
+		print-color-adjust: exact !important;
+	    }
+	}
     </style>
 </head>
 <body>

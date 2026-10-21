@@ -28,11 +28,26 @@
         .sub-position-header { display: flex; justify-content: space-between; font-weight: 500; color: #333; font-size: 0.95rem; }
         .sub-position-dates { color: #888; font-size: 0.85rem; white-space: nowrap; }
 
-        @media print {
-            /* Keep an employer's combined block (all its sub-positions) from
-               splitting awkwardly across a page break. */
-            .job, .employer-group { page-break-inside: avoid; }
-        }
+	@media print {
+	    /* Keep job blocks intact */
+	    .job, .employer-group { 
+		page-break-inside: avoid; 
+	    }
+
+	    /* Target the list items with double-class specificity to beat earlier overrides */
+	    body .skills-list li,
+	    ul.skills-list li {
+                background: #e0f2f1;
+                padding: 5px 12px;
+                border-radius: 20px;
+                font-size: 0.85rem;
+                color: #004d40;
+                font-weight: 500;
+		display: inline-block !important; /* Ensures box geometry renders correctly */
+		-webkit-print-color-adjust: exact !important;
+		print-color-adjust: exact !important;
+	    }
+	}
     </style>
 </head>
 <body>

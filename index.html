@@ -7,7 +7,7 @@
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 20px; background: #f5f5f7; color: #333; }
         .control-panel { max-width: 900px; margin: 0 auto 20px auto; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; gap: 15px; align-items: center; justify-content: space-between; }
-        .controls-left { display: flex; gap: 15px; align-items: center; }
+        .controls { display: flex; gap: 15px; align-items: center; flex-wrap: wrap; }
         select, button { padding: 8px 12px; font-size: 14px; border-radius: 4px; border: 1px solid #ccc; cursor: pointer; }
         button.btn-primary { background: #0066cc; color: white; border: none; font-weight: bold; }
         button.btn-primary:hover { background: #0052a3; }
@@ -22,14 +22,18 @@
             .control-panel { display: none !important; }
             body { margin: 0; background: white; }
             #viewer-frame { border: none; height: 100vh; box-shadow: none; }
+			
+			/* Force browser to preserve background colors when printing */
+			* { -webkit-print-color-adjust: exact !important; 
+			print-color-adjust: exact !important; }
         }
     </style>
 </head>
 <body>
 
     <div class="control-panel">
-        <div class="controls-left">
-            <label for="theme-select"><strong>Select Offline Template:</strong> </label>
+        <div class="controls">
+            <label for="theme-select"><strong>Style:</strong> </label>
             <select id="theme-select" onchange="compileResumeLocally()">
                 <option value="elegant">Elegant Theme (Clean & Professional)</option>
                 <option value="modern">Modern Theme (Teal Borders & Round Badges)</option>
@@ -37,8 +41,19 @@
                 <option value="classy">Classy Theme (Sophisticated Editorial Serif)</option>
                 <option value="spartan">Spartan Theme (Ultra-Density Plain Text)</option>
             </select>
-            <button class="btn-primary" onclick="compileResumeLocally()">Force Redraw</button>
+            <label for="role-select"><strong>Role:</strong> </label>
+            <!-- Each value (except "master") maps to src/roles/<value>.role.json -->
+            <select id="role-select" onchange="onRoleChange()">
+                <option value="master">All Experience (Master)</option>
+                <option value="cloud">Cloud / DevOps Engineer</option>
+                <option value="dba">Database / Systems Administrator</option>
+                <option value="security">Infrastructure &amp; Security</option>
+                <option value="datacenter">Data Center Technician</option>
+            </select>
+			<label for="group-toggle-btn"><strong>Multiple Titles:</strong> </label>
             <button class="btn-toggle" id="group-toggle-btn" onclick="toggleGrouping()">Employment Grouping</button>
+			<label for="redraw-btn"><strong>Not Refreshing?</strong> </label>
+            <button class="btn-primary" id="redraw-btn" onclick="compileResumeLocally()">Force Redraw</button>
         </div>
         <!-- Isolated Print Component Trigger -->
         <button class="btn-success" onclick="printResumeIsolated()">Print to PDF</button>
@@ -84,9 +99,14 @@
             return groups;
         }
 
+        // Highlights can be plain strings (legacy) or {id, text} objects.
+        function highlightText(h) {
+            return typeof h === 'string' ? h : (h && h.text) || '';
+        }
+
         function buildHighlightsHtml(job) {
-            if (job.highlights && Array.isArray(job.highlights)) {
-                return `<ul>${job.highlights.map(h => `<li>${h}</li>`).join('')}</ul>`;
+            if (job.highlights && Array.isArray(job.highlights) && job.highlights.length > 0) {
+                return `<ul>${job.highlights.map(h => `<li>${highlightText(h)}</li>`).join('')}</ul>`;
             }
             return '';
         }
@@ -96,6 +116,168 @@
         // children). Match whatever the template actually provides.
         function isListContainer(el) {
             return !!el && (el.tagName === 'UL' || el.tagName === 'OL');
+        }
+
+        // ---- Target-role overlays -------------------------------------
+        // A role file (src/roles/<key>.role.json) only describes what differs
+        // from the master resume. All fields are optional:
+        //   label, summary, title     -> replace headline / summary / print title
+        //   bullets: [ids]            -> WHITELIST + ORDER of highlight ids, applied per job
+        //                                (a job with no matches falls back to its "default": true
+        //                                 bullets, or all of its bullets if none are flagged)
+        //   skills: [group names]     -> WHITELIST + ORDER of skill groups
+        //   certificatesFirst: [names]-> these certs move to the top; the rest follow
+        //   links: [keys]             -> which contact links to show, in order (e.g. "linkedin", "website")
+        const ROLE_STORAGE_KEY = 'targetRole';
+
+        async function loadRole(key) {
+            if (!key || key === 'master') return null;
+            const res = await fetch(`src/roles/${key}.role.json?v=${Date.now()}`);
+            if (!res.ok) throw new Error(`Missing role file src/roles/${key}.role.json`);
+            return await res.json();
+        }
+
+        // Returns a merged COPY; the master data is never mutated.
+        function applyRole(master, role) {
+            const r = JSON.parse(JSON.stringify(master));
+            if (!role) return r;
+
+            r.basics = r.basics || {};
+            if (role.label) r.basics.label = role.label;
+            if (role.summary) r.basics.summary = role.summary;
+
+            if (Array.isArray(role.bullets) && Array.isArray(r.work)) {
+                const order = new Map(role.bullets.map((id, i) => [id, i]));
+                const found = new Set();
+                r.work.forEach(job => {
+                    const original = job.highlights || [];
+                    const kept = original.filter(h => h && typeof h === 'object' && order.has(h.id));
+                    kept.sort((a, b) => order.get(a.id) - order.get(b.id));
+                    kept.forEach(h => found.add(h.id));
+
+                    if (kept.length === 0 && original.length > 0) {
+                        // No role-specific bullets for this job: never show a bare title.
+                        // Use bullets flagged "default": true if the job has any,
+                        // otherwise fall back to all of the job's bullets.
+                        const flagged = original.filter(h => h && typeof h === 'object' && h.default === true);
+                        job.highlights = flagged.length > 0 ? flagged : original;
+                    } else {
+                        job.highlights = kept;
+                    }
+                });
+                role.bullets.filter(id => !found.has(id))
+                    .forEach(id => console.warn(`Role "${role.label || ''}": no bullet with id "${id}"`));
+            }
+
+            if (Array.isArray(role.skills) && Array.isArray(r.skills)) {
+                const picked = [];
+                role.skills.forEach(name => {
+                    const g = r.skills.find(s => s.name === name);
+                    if (g) picked.push(g);
+                    else console.warn(`Role "${role.label || ''}": no skill group named "${name}"`);
+                });
+                r.skills = picked;
+            }
+
+            if (Array.isArray(role.certificatesFirst) && Array.isArray(r.certificates)) {
+                const first = [];
+                role.certificatesFirst.forEach(name => {
+                    const c = r.certificates.find(x => x.name === name);
+                    if (c) first.push(c);
+                    else console.warn(`Role "${role.label || ''}": no certificate named "${name}"`);
+                });
+                r.certificates = first.concat(r.certificates.filter(c => !first.includes(c)));
+            }
+            return r;
+        }
+
+        function onRoleChange() {
+            try { localStorage.setItem(ROLE_STORAGE_KEY, document.getElementById('role-select').value); } catch (e) {}
+            compileResumeLocally();
+        }
+
+        function initRoleSelect() {
+            const sel = document.getElementById('role-select');
+            let saved = null;
+            try { saved = localStorage.getItem(ROLE_STORAGE_KEY); } catch (e) {}
+            if (saved && Array.from(sel.options).some(o => o.value === saved)) sel.value = saved;
+        }
+
+        // ---- Contact links (website + profiles) -------------------------
+        // Sources: basics.url (personal website, key "website") and each
+        // basics.profiles[] entry (key = network name lowercased, e.g. "linkedin").
+        // A role file may set  "links": ["linkedin", "website"]  to choose which
+        // appear and in what order; omit it to show all of them.
+        function profileKey(network) {
+            return (network || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+        }
+
+        function isHttpUrl(u) {
+            return typeof u === 'string' && /^https?:\/\//i.test(u);
+        }
+
+        // https://www.linkedin.com/in/name/  ->  linkedin.com/in/name
+        function displayUrl(u) {
+            return u.replace(/^https?:\/\//i, '').replace(/^www\./i, '').replace(/\/+$/, '');
+        }
+
+        function selectLinks(basics, role) {
+            const all = [];
+            if (isHttpUrl(basics.url)) all.push({ key: 'website', url: basics.url });
+            (basics.profiles || []).forEach(p => {
+                if (isHttpUrl(p.url)) all.push({ key: profileKey(p.network), url: p.url });
+            });
+
+            if (role && Array.isArray(role.links)) {
+                const picked = [];
+                role.links.forEach(k => {
+                    const hit = all.find(l => l.key === k);
+                    if (hit) picked.push(hit);
+                    else console.warn(`Role "${role.label || ''}": no link with key "${k}" (available: ${all.map(l => l.key).join(', ') || 'none'})`);
+                });
+                return picked;
+            }
+            return all;
+        }
+
+        function makeLink(doc, url) {
+            const a = doc.createElement('a');
+            a.href = url;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.textContent = displayUrl(url);
+            a.style.color = 'inherit';
+            a.style.textDecoration = 'underline';
+            return a;
+        }
+
+        // Fills #res-contact with plain-text parts (email, phone, place) and
+        // clickable links. If the template provides its own #res-links element
+        // the links go there; otherwise they are appended to the contact line,
+        // so every theme works without template edits.
+        function renderContact(doc, textParts, links) {
+            const contactEl = doc.getElementById('res-contact');
+            const linksEl = doc.getElementById('res-links');
+            if (!contactEl && !linksEl) {
+                console.warn('Template has no #res-contact or #res-links; skipping contact line');
+                return;
+            }
+
+            const fill = (el, parts, linkList) => {
+                el.textContent = '';
+                const total = parts.length + linkList.length;
+                let n = 0;
+                const sep = () => { if (n++ < total - 1) el.appendChild(doc.createTextNode(' | ')); };
+                parts.forEach(t => { el.appendChild(doc.createTextNode(t)); sep(); });
+                linkList.forEach(l => { el.appendChild(makeLink(doc, l.url)); sep(); });
+            };
+
+            if (linksEl) {
+                if (contactEl) fill(contactEl, textParts, []);
+                fill(linksEl, [], links);
+            } else {
+                fill(contactEl, textParts, links);
+            }
         }
 
         // Null-safe text injection: a template missing an element is skipped
@@ -148,7 +330,13 @@
                 // 1. Fetch verified local data source
                 const dataResponse = await fetch('src/resume.json');
                 if (!dataResponse.ok) throw new Error("Missing src/resume.json file.");
-                const resume = await dataResponse.json();
+                const master = await dataResponse.json();
+
+                // 1b. Load the selected target-role overlay (null = full master view)
+                //     and merge it over a copy of the master data
+                const roleKey = document.getElementById('role-select').value;
+                const role = await loadRole(roleKey);
+                const resume = applyRole(master, role);
 
                 // 2. Dynamically fetch the selected local layout template file
                 const templateResponse = await fetch(`src/${selectedTheme}.template.html?v=${Date.now()}`);
@@ -166,11 +354,12 @@
                     setText(doc, 'res-label', b.label);
 
                     // Print header / default PDF filename come from the document title
-                    doc.title = (b.title || ((b.name || 'Resume') + ' - Resume'));
+                    if (role && role.title) doc.title = role.title;
+                    else if (role && role.label) doc.title = (b.name || 'Resume') + ' - ' + role.label + ' Resume';
+                    else doc.title = b.title || ((b.name || 'Resume') + ' - Resume');
 
                     const place = [b.location?.city, b.location?.region].filter(Boolean).join(', ');
-                    const contact = [b.email, b.phone, place].filter(Boolean).join(' | ');
-                    setText(doc, 'res-contact', contact);
+                    renderContact(doc, [b.email, b.phone, place].filter(Boolean), selectLinks(b, role));
 
                     injectSummary(doc, b.summary);
                 }
@@ -322,6 +511,7 @@
         }
 
         window.onload = function() {
+            initRoleSelect();
             updateGroupToggleButton();
             compileResumeLocally();
         };
