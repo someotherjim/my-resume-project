@@ -174,10 +174,6 @@
   ],
   "certificates": [
     {
-      "name": "Salesforce Certified Administrator (ADM201)",
-      "issuer": "Salesforce"
-    },
-    {
       "name": "AWS Certified Cloud Practitioner",
       "issuer": "Amazon Web Services"
     },
@@ -194,12 +190,24 @@
       "issuer": "CompTIA"
     },
     {
+      "name": "CompTIA Secure Infrastructure Specialist (CSIS)",
+      "issuer": "CompTIA"
+    },
+    {
+      "name": "CompTIA IT Operations Specialist (CIOS)",
+      "issuer": "CompTIA"
+    },
+    {
       "name": "ITIL 4 Foundation \u2013 IT Service Management",
       "issuer": "AXELOS"
     },
     {
       "name": "Linux Essentials Certification",
       "issuer": "LPI"
+    },
+	{
+      "name": "Salesforce Certified Administrator (ADM201)",
+      "issuer": "Salesforce"
     }
   ],
   "skills": [

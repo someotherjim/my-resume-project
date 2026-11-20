@@ -42,9 +42,9 @@
                 <option value="spartan">Spartan Theme (Ultra-Density Plain Text)</option>
             </select>
             <label for="role-select"><strong>Role:</strong> </label>
-            <!-- Each value (except "master") maps to src/roles/<value>.role.json -->
+            <!-- Each value (except "principle") maps to src/roles/<value>.role.json -->
             <select id="role-select" onchange="onRoleChange()">
-                <option value="master">All Experience (Master)</option>
+                <option value="principle">All Experience (Principle)</option>
                 <option value="cloud">Cloud / DevOps Engineer</option>
                 <option value="dba">Database / Systems Administrator</option>
                 <option value="security">Infrastructure &amp; Security</option>
@@ -120,7 +120,7 @@
 
         // ---- Target-role overlays -------------------------------------
         // A role file (src/roles/<key>.role.json) only describes what differs
-        // from the master resume. All fields are optional:
+        // from the principle resume. All fields are optional:
         //   label, summary, title     -> replace headline / summary / print title
         //   bullets: [ids]            -> WHITELIST + ORDER of highlight ids, applied per job
         //                                (a job with no matches falls back to its "default": true
@@ -131,15 +131,15 @@
         const ROLE_STORAGE_KEY = 'targetRole';
 
         async function loadRole(key) {
-            if (!key || key === 'master') return null;
+            if (!key || key === 'principle') return null;
             const res = await fetch(`src/roles/${key}.role.json?v=${Date.now()}`);
             if (!res.ok) throw new Error(`Missing role file src/roles/${key}.role.json`);
             return await res.json();
         }
 
-        // Returns a merged COPY; the master data is never mutated.
-        function applyRole(master, role) {
-            const r = JSON.parse(JSON.stringify(master));
+        // Returns a merged COPY; the principle data is never mutated.
+        function applyRole(principle, role) {
+            const r = JSON.parse(JSON.stringify(principle));
             if (!role) return r;
 
             r.basics = r.basics || {};
@@ -330,13 +330,13 @@
                 // 1. Fetch verified local data source
                 const dataResponse = await fetch('src/resume.json');
                 if (!dataResponse.ok) throw new Error("Missing src/resume.json file.");
-                const master = await dataResponse.json();
+                const principle = await dataResponse.json();
 
-                // 1b. Load the selected target-role overlay (null = full master view)
-                //     and merge it over a copy of the master data
+                // 1b. Load the selected target-role overlay (null = full principle view)
+                //     and merge it over a copy of the principle data
                 const roleKey = document.getElementById('role-select').value;
                 const role = await loadRole(roleKey);
-                const resume = applyRole(master, role);
+                const resume = applyRole(principle, role);
 
                 // 2. Dynamically fetch the selected local layout template file
                 const templateResponse = await fetch(`src/${selectedTheme}.template.html?v=${Date.now()}`);
