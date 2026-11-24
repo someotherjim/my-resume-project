@@ -1,6 +1,6 @@
 # my-resume-project
 
-Please note that the JSON Resume data project found at https://jsonresume.org/ is where anybody wanting to further the "this needs to work better" cause should go ~ please join their community.
+Please note that the JSON Resume data project found at https://jsonresume.org/ is where anybody wanting to further the "résumé formatting should be universal" cause should go ~ please join their community.
 
 This project is simply an exercise for me ~ trying to compromise between what ATS supposedly wants, what a human recruiter supposedly wants, and today's notion that résumés need to be artisanally crafted towards not only a specific job role, but for the specific singular job opportunity posted.
 (If you are looking for a line by line alignment résumé builder, something like https://www.jobscan.co/ may be what you are after.)
